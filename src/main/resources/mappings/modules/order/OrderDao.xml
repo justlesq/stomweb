@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sohu.stom.modules.order.dao.OrderDao">
+    
+	<sql id="orderColumns">
+		a.id AS "id",
+		a.appname AS "appname",
+		a.appid AS "appid",
+		a.logo AS "logo",
+		a.bid AS "bid",
+		a.country AS "country",
+		a.top AS "top",
+		a.cycle AS "cycle",
+		a.source AS "source",
+		a.status AS "status",
+		a.begin_time AS "beginTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderJoins">
+	</sql>
+    
+	<select id="get" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM `order` a
+		<include refid="orderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM `order`  a
+		<include refid="orderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Order">
+		SELECT 
+			<include refid="orderColumns"/>
+		FROM `order` a
+		<include refid="orderJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO `order`(
+			id,
+			appname,
+			appid,
+			logo,
+			bid,
+			country,
+			top,
+			cycle,
+			source,
+			status,
+			begin_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{appname},
+			#{appid},
+			#{logo},
+			#{bid},
+			#{country},
+			#{top},
+			#{cycle},
+			#{source},
+			#{status},
+			#{beginTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE `order` SET
+			appname = #{appname},
+			appid = #{appid},
+			logo = #{logo},
+			bid = #{bid},
+			country = #{country},
+			top = #{top},
+			cycle = #{cycle},
+			source = #{source},
+			status = #{status},
+			begin_time = #{beginTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from `order` WHERE id = #{id}
+	</delete>
+	
+</mapper>

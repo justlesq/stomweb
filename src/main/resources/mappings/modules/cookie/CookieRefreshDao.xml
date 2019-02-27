@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sohu.stom.modules.cookie.dao.CookieRefreshDao">
+    
+	<sql id="cookieRefreshColumns">
+		a.id AS "id",
+		a.cookie AS "cookie"
+	</sql>
+	
+	<sql id="cookieRefreshJoins">
+	</sql>
+    
+	<select id="get" resultType="CookieRefresh">
+		SELECT 
+			<include refid="cookieRefreshColumns"/>
+		FROM cookie_refresh a
+		<include refid="cookieRefreshJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CookieRefresh">
+		SELECT 
+			<include refid="cookieRefreshColumns"/>
+		FROM cookie_refresh a
+		<include refid="cookieRefreshJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CookieRefresh">
+		SELECT 
+			<include refid="cookieRefreshColumns"/>
+		FROM cookie_refresh a
+		<include refid="cookieRefreshJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cookie_refresh(
+			id,
+			cookie
+		) VALUES (
+			#{id},
+			#{cookie}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cookie_refresh SET 	
+			cookie = #{cookie}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cookie_refresh
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

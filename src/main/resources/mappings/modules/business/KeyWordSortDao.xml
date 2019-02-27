@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sohu.stom.modules.business.dao.KeyWordSortDao">
+    <sql id="keyWordSortColumns">
+        a.id AS "id",
+        a.appid AS "appid",
+        a.appname AS "appname",
+        a.key_word AS "keyword",
+        a.key_sort AS "keysort"
+    </sql>
+
+
+
+
+    <select id="findAppNameList" resultType="string">
+        SELECT
+        a.appname
+        FROM key_word_sort a
+        group by a.appname
+    </select>
+
+
+
+    <select id="findKeyWordByAppName" resultType="string">
+        SELECT
+        a.key_word
+        FROM key_word_sort a
+        where a.appname =  <![CDATA[ #{appname}  ]]>
+    </select>
+
+    <select id="getKeyWordSort" resultType="KeyWordSort">
+        SELECT
+        <include refid="keyWordSortColumns"/>
+        FROM key_word_sort a
+        WHERE a.appid = #{appid} and a.key_word = #{keyword}
+    </select>
+
+    <select id="getMoniteTime" resultType="string">
+        SELECT
+        a.key_sort
+        FROM key_word_sort a
+        where a.appname = #{0} and a.key_word = #{1}
+    </select>
+
+
+
+    <update id="update">
+        UPDATE key_word_sort SET
+        appid = #{appid},
+        appname = #{appname},
+        key_word = #{keyword},
+        key_sort = #{keysort}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findKeyWordSort" resultType="KeyWordSort">
+        SELECT
+        <include refid="keyWordSortColumns"/>
+        FROM key_word_sort a
+        <where>
+            1 = 1
+        </where>
+        <if test="appname !=null and appname != ''">
+            and a.appname = #{appname}
+        </if>
+        <if test="keyword !=null and keyword != ''">
+            and a.key_word = #{keyword}
+        </if>
+    </select>
+
+    <!--清空keywordsort表-->
+    <update id="trucateKeyWordSort">
+        truncate table key_word_sort
+    </update>
+
+
+    <!--记录关键词排名-->
+    <insert id="saveKeyWordSort">
+        INSERT INTO key_word_sort(
+        id,
+        appid,
+        appname,
+        key_word,
+        key_sort
+        ) VALUES (
+        #{id},
+        #{appid},
+        #{appname},
+        #{keyword},
+        #{keysort}
+        )
+    </insert>
+
+</mapper>

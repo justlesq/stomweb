@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sohu.stom.modules.business.dao.TaskInfoDao">
+    
+	<sql id="taskInfoColumns">
+		a.id AS "id",
+		a.appname AS "appname",
+		a.keyword AS "keyword",
+		a.rank AS "rank",
+		a.aimrank AS "aimrank",
+		a.oldrank AS "oldrank",
+		a.logo AS "logo",
+		a.appleid AS "appleid",
+		a.bundleid AS "bundleid",
+		a.downloadurl AS "downloadurl",
+		a.source AS "source",
+		a.totalcount AS "totalcount",
+		a.finishcount AS "finishcount",
+		a.lockcount AS "lockcount",
+		a.keywordhot AS "keywordhot",
+		a.status AS "status",
+		a.tasktype AS "tasktype",
+		a.ismonitor AS "ismonitor",
+		a.cpsatype AS "cpsatype",
+		a.uuid AS "uuid",
+		a.begintime AS "begintime",
+		a.createtime AS "createtime",
+		a.updatetime AS "updatetime",
+		a.ipcount AS "ipcount",
+		a.maxrank AS "maxrank",
+		a.country AS "country"
+	</sql>
+
+	<sql id="keyWordSortColumns">
+		a.key_sort_id AS "id",
+		a.appid AS "appid",
+		a.appname AS "appname",
+		a.key_word AS "keyword",
+		a.key_sort AS "keysort"
+	</sql>
+
+	<sql id="taskInfoJoins">
+	</sql>
+
+
+
+	<!--只查ASO任务-->
+	<select id="findTaskOnShelves" resultType="TaskInfo">
+		SELECT
+		<include refid="taskInfoColumns"/>
+		FROM t_task_info a
+		<include refid="taskInfoJoins"/>
+		where a.tasktype = 0
+		group by  a.appname,a.keyword
+	</select>
+
+
+
+    
+	<select id="get" resultType="TaskInfo">
+		SELECT 
+			<include refid="taskInfoColumns"/>
+		FROM t_task_info a
+		<include refid="taskInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TaskInfo">
+		SELECT 
+			<include refid="taskInfoColumns"/>
+		FROM t_task_info a
+		<include refid="taskInfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY  a.appleid
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="TaskInfo">
+		SELECT 
+			<include refid="taskInfoColumns"/>
+		FROM t_task_info a
+		<include refid="taskInfoJoins"/>
+		ORDER BY  a.appleid
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY  a.appleid
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_task_info(
+			id,
+			appname,
+			keyword,
+			rank,
+			aimrank,
+			oldrank,
+			logo,
+			appleid,
+			bundleid,
+			downloadurl,
+			source,
+			totalcount,
+			finishcount,
+			lockcount,
+			keywordhot,
+			status,
+			tasktype,
+			ismonitor,
+			cpsatype,
+			uuid,
+			begintime,
+			createtime,
+			updatetime,
+			ipcount,
+			maxrank,
+			country
+		) VALUES (
+			#{id},
+			#{appname},
+			#{keyword},
+			#{rank},
+			#{aimrank},
+			#{oldrank},
+			#{logo},
+			#{appleid},
+			#{bundleid},
+			#{downloadurl},
+			#{source},
+			#{totalcount},
+			#{finishcount},
+			#{lockcount},
+			#{keywordhot},
+			#{status},
+			#{tasktype},
+			#{ismonitor},
+			#{cpsatype},
+			#{uuid},
+			#{begintime},
+			#{createtime},
+			#{updatetime},
+			#{ipcount},
+			#{maxrank},
+			#{country}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_task_info SET 	
+			appname = #{appname},
+			keyword = #{keyword},
+			rank = #{rank},
+			aimrank = #{aimrank},
+			oldrank = #{oldrank},
+			logo = #{logo},
+			appleid = #{appleid},
+			bundleid = #{bundleid},
+			downloadurl = #{downloadurl},
+			source = #{source},
+			totalcount = #{totalcount},
+			finishcount = #{finishcount},
+			lockcount = #{lockcount},
+			keywordhot = #{keywordhot},
+			status = #{status},
+			tasktype = #{tasktype},
+			ismonitor = #{ismonitor},
+			cpsatype = #{cpsatype},
+			uuid = #{uuid},
+			begintime = #{begintime},
+			createtime = #{createtime},
+			updatetime = #{updatetime},
+			ipcount = #{ipcount},
+			maxrank = #{maxrank},
+			country = #{country}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM t_task_info
+		WHERE id = #{id}
+	</update>
+
+</mapper>

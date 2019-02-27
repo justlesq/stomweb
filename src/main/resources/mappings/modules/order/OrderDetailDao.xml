@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sohu.stom.modules.order.dao.OrderDetailDao">
+    
+	<sql id="orderDetailColumns">
+		a.id AS "id",
+		a.order_id AS "orderId",
+		a.key_word AS "keyWord",
+		a.total_count AS "totalCount",
+		a.finish_count AS "finishCount",
+		a.lock_count AS "lockCount",
+		a.old_rank AS "oldRank",
+		a.new_rank AS "newRank",
+		a.hot AS "hot",
+		a.put_time AS "putTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="orderDetailJoins">
+		LEFT JOIN `order` b ON b.id = a.order_id
+	</sql>
+    
+	<select id="get" resultType="OrderDetail">
+		SELECT 
+			<include refid="orderDetailColumns"/>
+		FROM order_detail a
+		<include refid="orderDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="OrderDetail">
+		SELECT 
+			<include refid="orderDetailColumns"/>
+		FROM order_detail a
+		<include refid="orderDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="orderId != null and orderId != ''">
+				AND a.order_id = #{orderId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OrderDetail">
+		SELECT 
+			<include refid="orderDetailColumns"/>
+		FROM order_detail a
+		<include refid="orderDetailJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO order_detail(
+			id,
+			order_id,
+			key_word,
+			total_count,
+			finish_count,
+			lock_count,
+			old_rank,
+			new_rank,
+			hot,
+			put_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{orderId},
+			#{keyWord},
+			#{totalCount},
+			#{finishCount},
+			#{lockCount},
+			#{oldRank},
+			#{newRank},
+			#{hot},
+			#{putTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE order_detail SET 	
+			order_id = #{orderId},
+			key_word = #{keyWord},
+			total_count = #{totalCount},
+			finish_count = #{finishCount},
+			lock_count = #{lockCount},
+			old_rank = #{oldRank},
+			new_rank = #{newRank},
+			hot = #{hot},
+			put_time = #{putTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="updateTotalCount">
+		UPDATE order_detail SET
+		total_count = #{totalCount}
+		WHERE id = #{id}
+	</update>
+
+
+	<delete id="delete">
+		delete from order_detail WHERE order_id = #{orderId}
+	</delete>
+	
+</mapper>
